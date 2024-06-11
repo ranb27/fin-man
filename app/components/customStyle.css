@@ -1,0 +1,6 @@
+.wrapper {
+  .ant-picker-input > input::placeholder {
+    color: oklch(var(--bc));
+    font-weight: bold;
+  }
+}

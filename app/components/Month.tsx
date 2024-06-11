@@ -9,7 +9,15 @@ export default function Month() {
 
   return (
     <div>
-      <DatePicker onChange={onChange} picker="month" />
+      <div className="my-auto border-b-2 border-primary bg-primary/10 w-fit">
+        <DatePicker
+          placeholder="Select month"
+          onChange={onChange}
+          picker="month"
+          size="large"
+          variant="borderless"
+        />
+      </div>
     </div>
   );
 }

@@ -32,5 +32,5 @@ export default function PieChart() {
     };
   }, []);
 
-  return <div id="chart" className="h-full w-full" />;
+  return <div id="chart" className="h-[80%] w-[80%]" />;
 }
