@@ -4,3 +4,8 @@
     font-weight: bold;
   }
 }
+
+.ant-picker-input {
+  color: oklch(var(--er));
+  font-weight: bold;
+}

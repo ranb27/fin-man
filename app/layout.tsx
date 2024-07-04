@@ -48,7 +48,7 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-      <body className="bg-base text-base-content duration-300">
+      <body className="bg-base-200 text-base-content duration-300">
         <main className="min-h-screen h-full flex flex-col items-center">
           <nav className="w-full navbar glass flex justify-center gap-2 border-b border-b-foreground/10 h-16">
             <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">

@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import ConnectSupabaseSteps from "@/components/tutorial/ConnectSupabaseSteps";
 import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
 import Header from "@/components/Header";
+import Link from "next/link";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -32,6 +33,9 @@ export default async function Index() {
                   assumenda excepturi exercitationem quasi. In deleniti eaque
                   aut repudiandae et a id nisi.
                 </p>
+                <button className="btn btn-primary">
+                  <Link href="/pages/dashboard">Go to Dashboard</Link>
+                </button>
                 {/* {isSupabaseConnected && <AuthButton />} */}
               </div>
             </div>

@@ -4,7 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import styled from "@emotion/styled";
 import { GridToolbar } from "@mui/x-data-grid";
 
-export default function Table() {
+export default function Table({ rows, updateData, deleteData }) {
   const StyledDataGrid = styled(DataGrid)({
     border: "none", // Remove the border
     "& .MuiDataGrid-root": {
@@ -22,7 +22,6 @@ export default function Table() {
       alignItems: "center",
       fontSize: "14px",
       color: "oklch(var(--bc))",
-      fontFace: "Poppins", // Note: Corrected property name to lowercase 'fontFace'
     },
 
     "& .MuiDataGrid-columnHeaderTitle": {
@@ -30,7 +29,6 @@ export default function Table() {
       color: "oklch(var(--p))",
       fontSize: "15px",
       textAlign: "center",
-      fontFace: "Poppins", // Note: Corrected property name to lowercase 'fontFace'
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
@@ -49,11 +47,20 @@ export default function Table() {
     // borderRadius: "12px", // Set the border radius for the entire DataGrid
   });
 
+  interface RowType {
+    id: number;
+    desc: string;
+    amount: number;
+    use_type: string;
+  }
+
   return (
-    <div className={`text-base-content bg-base-100 grid grid-cols-1 `}>
-      <StyledDataGrid
-        rows={[]}
-        columns={[]}
+    <div
+      className={`text-base-content bg-base-100 shadow-md rounded-xl mb-12 z-50`}
+    >
+      {/* <StyledDataGrid
+        rows={rows}
+        columns={columns}
         slots={{
           toolbar: GridToolbar,
         }}
@@ -68,7 +75,6 @@ export default function Table() {
           color: "oklch(var(--bc))",
           fontWeight: "bold",
           "& .MuiDataGrid-cell": {
-            fontFamily: "'Poppins' , 'sans-serif'",
             borderRight: "1px solid oklch(var(--b3))",
             borderTop: "1px solid oklch(var(--b3))",
           },
@@ -81,22 +87,14 @@ export default function Table() {
           },
           "& .MuiDataGrid-columnHeaderTitle": {
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
-          "& .MuiDataGrid-toolbarContainer": {
-            fontFamily: "'Poppins' , 'sans-serif'",
-          },
+
           "& .MuiDataGrid-scrollbar": {
             backgroundColor: "oklch(var(--b))",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
-          " & .MuiDataGrid-footerContainer": {
-            fontFamily: "'Poppins' , 'sans-serif'",
-            // bgcolor: "oklch(var(--b2))",
-          },
+
           " & .MuiTablePagination-root": {
             color: "oklch(var(--bc))",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           " & .MuiSvgIcon-root ": {
             color: "oklch(var(--bc))",
@@ -104,32 +102,26 @@ export default function Table() {
           "& .MuiButton-text": {
             color: "oklch(var(--bc))",
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           " & .MuiDataGrid-scrollbarFiller": {
             backgroundColor: "oklch(var(--b1))",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           "& .MuiTablePagination-selectLabel": {
             color: "oklch(var(--bc))",
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           "& .MuiTablePagination-displayedRows": {
             color: "oklch(var(--bc))",
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           "& .MuiSelect-select": {
             color: "oklch(var(--bc))",
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
           },
           "& .MuiInputBase-root": {
             color: "oklch(var(--bc))",
             // bgcolor: "oklch(var(--b2))",
             fontWeight: "bold",
-            fontFamily: "'Poppins' , 'sans-serif'",
             // border: "1px solid oklch(var(--b3))",
           },
           "& .MuiDataGrid-filler": {
@@ -138,7 +130,77 @@ export default function Table() {
 
           height: 400,
         }}
-      />
+      /> */}
+      <div className="overflow-auto max-h-[50vh]">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              {/* <th className="text-center">ID</th> */}
+              <th className="text-center">Description</th>
+              <th className="text-center">Amout</th>
+              <th className="text-center">Use Type</th>
+              <th className="text-center">Edit</th>
+              <th className="text-center">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row: RowType) => (
+              <tr key={row.id}>
+                <>
+                  {/* <td>{row.id}</td> */}
+                  <td>{row.desc}</td>
+                  <td className="text-primary font-bold">{row.amount}</td>
+                  <td
+                    className={`font-bold ${
+                      row.use_type === "income"
+                        ? "text-success"
+                        : "text-warning"
+                    }`}
+                  >
+                    {row.use_type.toUpperCase()}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        updateData(row.id);
+                      }}
+                      className="btn btn-sm btn-info"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        height="1em"
+                        width="1em"
+                      >
+                        <path d="M12 2A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10h-2a8 8 0 01-8 8 8 8 0 01-8-8 8 8 0 018-8V2m6.78 1a.69.69 0 00-.48.2l-1.22 1.21 2.5 2.5L20.8 5.7c.26-.26.26-.7 0-.95L19.25 3.2c-.13-.13-.3-.2-.47-.2m-2.41 2.12L9 12.5V15h2.5l7.37-7.38-2.5-2.5z" />
+                      </svg>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        deleteData(row.id);
+                      }}
+                      className="btn btn-error btn-sm"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        height="1em"
+                        width="1em"
+                      >
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path d="M7 6V3a1 1 0 011-1h8a1 1 0 011 1v3h5v2h-2v13a1 1 0 01-1 1H5a1 1 0 01-1-1V8H2V6h5zm6.414 8l1.768-1.768-1.414-1.414L12 12.586l-1.768-1.768-1.414 1.414L10.586 14l-1.768 1.768 1.414 1.414L12 15.414l1.768 1.768 1.414-1.414L13.414 14zM9 4v2h6V4H9z" />
+                      </svg>
+                    </button>
+                  </td>
+                </>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
