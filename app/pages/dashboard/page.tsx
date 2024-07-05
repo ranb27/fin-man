@@ -266,8 +266,8 @@ function page() {
   return (
     <>
       {data.userEmail ? (
-        <div className="grid grid-cols-1 h-full gap-12 lg:my-auto mx-2 pt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mx-auto">
+        <div className="grid grid-cols-1 h-full gap-12 lg:my-auto mx-2 pt-4 z-50">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mx-auto my-12">
             <Chart data={chartData} />
             <div className="grid grid-cols-1 gap-2 animate-in">
               <SelectType value={selectType} setValue={setSelectType} />
@@ -362,10 +362,16 @@ function page() {
           <DialogExpense addData={addData} />
         </div>
       ) : (
-        <div className="flex justify-center my-auto items-center h-full">
+        <div className="grid justify-center my-24 gap-4 items-center">
           <h1 className="text-xl text-center">
             Please login to view dashboard
           </h1>
+          <div className="flex flex-col gap-4">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
         </div>
       )}
     </>

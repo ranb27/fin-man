@@ -18,7 +18,7 @@ export default function SelectType({ value, setValue }: SelectTypeProps) {
           value={value}
           onChange={handleSelectChange}
         >
-          <option disabled value="">
+          <option disabled value="" className="text-info font-bold">
             Pick your use type
           </option>
           <option value="income">Income</option>
