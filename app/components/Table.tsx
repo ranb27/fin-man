@@ -19,11 +19,11 @@ export default function Table({ rows, updateData, deleteData }: TableProps) {
   }
 
   return (
-    <div className={`text-base-content bg-base-100 shadow-md rounded-xl`}>
+    <div className={`text-base-content bg-base-100/50 shadow-md rounded-xl`}>
       <div className="overflow-auto max-h-96">
         <table className="table">
           {/* head */}
-          <thead>
+          <thead className="text-primary">
             <tr>
               {/* <th className="text-center">ID</th> */}
               <th className="text-center">Description</th>
@@ -38,10 +38,10 @@ export default function Table({ rows, updateData, deleteData }: TableProps) {
               <tr key={row.id}>
                 <>
                   {/* <td>{row.id}</td> */}
-                  <td>{row.desc}</td>
-                  <td className="text-primary font-bold">{row.amount}</td>
+                  <td className="text-xs">{row.desc}</td>
+                  <td className="text-info font-bold text-xs">{row.amount}</td>
                   <td
-                    className={`font-bold ${
+                    className={`font-bold text-xs ${
                       row.use_type === "income"
                         ? "text-success"
                         : "text-warning"
@@ -54,7 +54,7 @@ export default function Table({ rows, updateData, deleteData }: TableProps) {
                       onClick={() => {
                         updateData(row.id);
                       }}
-                      className="btn btn-sm btn-info"
+                      className="btn btn-xs btn-info"
                     >
                       <svg
                         viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ export default function Table({ rows, updateData, deleteData }: TableProps) {
                       onClick={() => {
                         deleteData(row.id);
                       }}
-                      className="btn btn-error btn-sm"
+                      className="btn btn-error btn-xs"
                     >
                       <svg
                         viewBox="0 0 24 24"

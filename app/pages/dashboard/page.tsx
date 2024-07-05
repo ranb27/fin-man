@@ -270,8 +270,7 @@ function page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full my-12">
             <Chart data={chartData} />
             <div className="grid grid-cols-1 gap-2 animate-in">
-              <SelectType value={selectType} setValue={setSelectType} />
-              <div className="card bg-base-100 shadow">
+              <div className="card glass shadow">
                 <div className="card-body">
                   <div className="flex justify-between my-auto">
                     <div className="grid">
@@ -349,7 +348,7 @@ function page() {
                   </div>
                 </div>
               </div>
-
+              <SelectType value={selectType} setValue={setSelectType} />
               <Table
                 rows={tableData}
                 updateData={updateData}
