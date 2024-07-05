@@ -13,6 +13,7 @@ const Chart = ({ data }: { data: any[] }) => {
   return (
     <div className="grid grid-cols-1 w-full max-h-[50vh] my-auto">
       <PieChart
+        margin={{ top: 0, bottom: 100, left: 0, right: 0 }}
         series={[
           {
             innerRadius: 30,
@@ -27,16 +28,20 @@ const Chart = ({ data }: { data: any[] }) => {
         ]}
         slotProps={{
           legend: {
-            direction: "column",
-            position: { vertical: "top", horizontal: "right" },
+            direction: "row",
+            position: { vertical: "bottom", horizontal: "right" },
             padding: 0,
             labelStyle: {
-              fontSize: 14,
+              fontSize: 10,
               fill: "oklch(var(--bc))",
             },
+            itemMarkWidth: 20,
+            itemMarkHeight: 2,
+            markGap: 5,
+            itemGap: 10,
           },
         }}
-        height={250}
+        height={300}
       />
     </div>
   );

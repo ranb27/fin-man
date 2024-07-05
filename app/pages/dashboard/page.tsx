@@ -267,7 +267,7 @@ function page() {
     <>
       {data.userEmail ? (
         <div className="grid grid-cols-1 h-full gap-12 lg:my-auto mx-2 pt-4 z-50">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mx-auto my-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full my-12">
             <Chart data={chartData} />
             <div className="grid grid-cols-1 gap-2 animate-in">
               <SelectType value={selectType} setValue={setSelectType} />

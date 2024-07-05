@@ -20,7 +20,7 @@ export default function Table({ rows, updateData, deleteData }: TableProps) {
 
   return (
     <div className={`text-base-content bg-base-100 shadow-md rounded-xl`}>
-      <div className="overflow-auto">
+      <div className="overflow-auto max-h-96">
         <table className="table">
           {/* head */}
           <thead>
