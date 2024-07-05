@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { enqueueSnackbar } from "notistack";
 
 //! Components
-import Month from "@/app/components/Month";
+import SelectType from "@/app/components/SelectType";
 import Table from "@/app/components/Table";
 import Chart from "@/app/components/Chart";
 import DialogExpense from "@/app/components/DialogExpense";
@@ -39,10 +39,14 @@ function page() {
   });
 
   const [tableData, setTableData] = useState<TableInterface[]>([]);
+  const [chartData, setChartData] = useState<TableInterface[]>([]);
   const [sumAmount, setSumAmount] = useState<number>(0);
 
   // State reload tableData when function success
   const [isTable, setIsTable] = useState<boolean>(false);
+
+  // Select useType from SelectType component
+  const [selectType, setSelectType] = useState<string>("");
 
   //! Fetch
   //* Get User Email From Auth
@@ -96,7 +100,7 @@ function page() {
   };
 
   //* Select Data
-  // Select Data from database table name "record_list" with filter where user_email is equal to data.userEmail
+  // Select Data from database table name "record_list" with filter where user_email is equal to data.userEmail & use_type is equal to selectType
   useEffect(() => {
     const selectData = async () => {
       if (!data.userEmail) {
@@ -104,10 +108,22 @@ function page() {
         return;
       }
 
-      const { data: selectedData, error } = await supabase
+      // Start building the query
+      let query = supabase
         .from("record_list")
         .select("*")
         .eq("user_email", data.userEmail);
+
+      // Conditionally add the filter for use_type if selectType is not an empty string
+      if (selectType !== "") {
+        query = query.eq("use_type", selectType);
+      }
+
+      // Finalize the query by adding the order clause
+      query = query.order("created_at", { ascending: false });
+
+      // Execute the query
+      const { data: selectedData, error } = await query;
 
       if (error) {
         console.error("Error fetching data:", error);
@@ -115,8 +131,9 @@ function page() {
       }
 
       setTableData(selectedData);
+      setChartData(selectedData);
 
-      // Calculate sum of amount with data.use_type is equal to "income" - data.use_type is equal to "expense"
+      // Calculate sum of amount based on use_type
       const sum = selectedData.reduce((acc, curr) => {
         if (curr.use_type === "income") {
           return acc + curr.amount;
@@ -129,7 +146,7 @@ function page() {
     };
 
     selectData();
-  }, [data.userEmail, isTable]);
+  }, [data.userEmail, isTable, selectType]);
 
   //* Delete Data
   // Delete Data from database table name "record_list" with filter where id is equal to id
@@ -177,8 +194,8 @@ function page() {
       title: "Update Data",
       html: `
         <div> 
-        <p>Description: <span style="color: oklch(var(--p));">${showDataUpdate.desc}</span></p><br>
-        <p>Amount: <span style="color: oklch(var(--p));">${showDataUpdate.amount}</span></p><br>
+          <p>Description: <span style="color: oklch(var(--p));">${showDataUpdate.desc}</span></p><br>
+          <p>Amount: <span style="color: oklch(var(--p));">${showDataUpdate.amount}</span></p><br>
         </div>
         <input id="desc" class="swal2-input" placeholder="Description" value="${showDataUpdate.desc}">
         <input id="amount" type="number" class="swal2-input" placeholder="Amount" value="${showDataUpdate.amount}">
@@ -186,12 +203,19 @@ function page() {
       focusConfirm: false,
       showCancelButton: true,
       preConfirm: () => {
-        return {
-          desc: (document.getElementById("desc") as HTMLInputElement).value,
-          amount: Number(
-            (document.getElementById("amount") as HTMLInputElement).value
-          ),
-        };
+        const desc = (
+          document.getElementById("desc") as HTMLInputElement
+        ).value.trim();
+        const amount = Number(
+          (document.getElementById("amount") as HTMLInputElement).value
+        );
+
+        if (!desc || amount <= 0 || isNaN(amount)) {
+          Swal.showValidationMessage("Input invalid");
+          return null;
+        }
+
+        return { desc, amount };
       },
     });
 
@@ -210,6 +234,7 @@ function page() {
       if (error) {
         console.error("Error updating data:", error);
         await Swal.fire("Error", "Failed to update data", "error");
+        setIsTable(false);
         return;
       }
 
@@ -236,26 +261,47 @@ function page() {
     return data;
   };
 
+  console.log("sumAmount", sumAmount);
+
   return (
-    <div className="grid grid-cols-1 h-full gap-12 lg:my-auto mx-2 pt-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mx-auto">
-        <Chart />
-        <div className="grid grid-cols-1 gap-2">
-          <div className="card bg-base-100 shadow-md">
-            <div className="card-body">
-              <div className="flex justify-between my-auto">
-                <div className="grid">
-                  <h2 className="card-title text-sm">Balance</h2>
+    <>
+      {data.userEmail ? (
+        <div className="grid grid-cols-1 h-full gap-12 lg:my-auto mx-2 pt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mx-auto">
+            <Chart data={chartData} />
+            <div className="grid grid-cols-1 gap-2 animate-in">
+              <SelectType value={selectType} setValue={setSelectType} />
+              <div className="card bg-base-100 shadow">
+                <div className="card-body">
+                  <div className="flex justify-between my-auto">
+                    <div className="grid">
+                      <h2 className="card-title text-sm">
+                        {selectType !== "" ? "Total" : "Balance"}
+                      </h2>
 
-                  <p className="font-bold flex">
-                    <span
-                      className={`text-2xl my-auto ${
-                        sumAmount < 0 ? "text-error" : "text-success"
-                      }`}
-                    >
-                      {sumAmount}
-                    </span>
+                      <p className="font-bold flex">
+                        <span
+                          className={`text-2xl my-auto ${
+                            sumAmount < 0 ? "text-error" : "text-success"
+                          }`}
+                        >
+                          {sumAmount ? sumAmount : 0}
+                        </span>
 
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width="1.5rem"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" />
+                          <path d="M8 6h5a3 3 0 013 3v.143A2.857 2.857 0 0113.143 12H8M8 12h5a3 3 0 013 3v.143A2.857 2.857 0 0113.143 18H8M8 6v12M11 4v2M11 18v2" />
+                        </svg>
+                      </p>
+                    </div>
                     <svg
                       fill="none"
                       stroke="currentColor"
@@ -263,70 +309,66 @@ function page() {
                       strokeLinejoin="round"
                       strokeWidth={2}
                       viewBox="0 0 24 24"
-                      width="1.5rem"
+                      width="3rem"
+                      className={`${
+                        sumAmount < 0
+                          ? "text-error animate-pulse"
+                          : "text-success"
+                      }`}
                     >
                       <path stroke="none" d="M0 0h24v24H0z" />
-                      <path d="M8 6h5a3 3 0 013 3v.143A2.857 2.857 0 0113.143 12H8M8 12h5a3 3 0 013 3v.143A2.857 2.857 0 0113.143 18H8M8 6v12M11 4v2M11 18v2" />
+                      <path d="M15 11v.01M5.173 8.378a3 3 0 114.656-1.377" />
+                      <path d="M16 4v3.803A6.019 6.019 0 0118.658 11h1.341a1 1 0 011 1v2a1 1 0 01-1 1h-1.342c-.336.95-.907 1.8-1.658 2.473V19.5a1.5 1.5 0 01-3 0v-.583a6.04 6.04 0 01-1 .083h-4a6.04 6.04 0 01-1-.083v.583a1.5 1.5 0 01-3 0v-2L5 17.473A6 6 0 018.999 7h2.5l4.5-3H16z" />
                     </svg>
-                  </p>
+                  </div>
+                  <div className="card-actions justify-start">
+                    <button
+                      onClick={() => {
+                        const modalAddIncome =
+                          document.getElementById("modal_add_income");
+                        if (modalAddIncome) {
+                          (modalAddIncome as HTMLDialogElement).showModal();
+                        }
+                      }}
+                      className="btn btn-sm btn-success"
+                    >
+                      Income
+                    </button>
+                    <button
+                      onClick={() => {
+                        const modalAddExpense =
+                          document.getElementById("modal_add_expense");
+                        if (modalAddExpense) {
+                          (modalAddExpense as HTMLDialogElement).showModal();
+                        }
+                      }}
+                      className="btn btn-sm btn-warning"
+                    >
+                      Expense
+                    </button>
+                  </div>
                 </div>
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                  width="3rem"
-                  className={`${
-                    sumAmount < 0 ? "text-error animate-pulse" : "text-success"
-                  }`}
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <path d="M15 11v.01M5.173 8.378a3 3 0 114.656-1.377" />
-                  <path d="M16 4v3.803A6.019 6.019 0 0118.658 11h1.341a1 1 0 011 1v2a1 1 0 01-1 1h-1.342c-.336.95-.907 1.8-1.658 2.473V19.5a1.5 1.5 0 01-3 0v-.583a6.04 6.04 0 01-1 .083h-4a6.04 6.04 0 01-1-.083v.583a1.5 1.5 0 01-3 0v-2L5 17.473A6 6 0 018.999 7h2.5l4.5-3H16z" />
-                </svg>
               </div>
-              <div className="card-actions justify-start">
-                <button
-                  onClick={() => {
-                    const modalAddIncome =
-                      document.getElementById("modal_add_income");
-                    if (modalAddIncome) {
-                      (modalAddIncome as HTMLDialogElement).showModal();
-                    }
-                  }}
-                  className="btn btn-sm btn-success"
-                >
-                  Income
-                </button>
-                <button
-                  onClick={() => {
-                    const modalAddExpense =
-                      document.getElementById("modal_add_expense");
-                    if (modalAddExpense) {
-                      (modalAddExpense as HTMLDialogElement).showModal();
-                    }
-                  }}
-                  className="btn btn-sm btn-warning"
-                >
-                  Expense
-                </button>
-              </div>
+
+              <Table
+                rows={tableData}
+                updateData={updateData}
+                deleteData={deleteData}
+              />
             </div>
           </div>
 
-          <Table
-            rows={tableData}
-            updateData={updateData}
-            deleteData={deleteData}
-          />
+          <DialogIncome addData={addData} />
+          <DialogExpense addData={addData} />
         </div>
-      </div>
-
-      <DialogIncome addData={addData} />
-      <DialogExpense addData={addData} />
-    </div>
+      ) : (
+        <div className="flex justify-center my-auto items-center h-full">
+          <h1 className="text-xl text-center">
+            Please login to view dashboard
+          </h1>
+        </div>
+      )}
+    </>
   );
 }
 

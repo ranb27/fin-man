@@ -4,49 +4,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import styled from "@emotion/styled";
 import { GridToolbar } from "@mui/x-data-grid";
 
-export default function Table({ rows, updateData, deleteData }) {
-  const StyledDataGrid = styled(DataGrid)({
-    border: "none", // Remove the border
-    "& .MuiDataGrid-root": {
-      border: "none", // Remove border from the root element
-    },
-    "& .MuiDataGrid-columnsContainer": {
-      borderBottom: "none", // Remove the border at the bottom of columns
-    },
-    "& .MuiDataGrid-row": {
-      border: "none", // Remove border around rows
-    },
-    "& .MuiDataGrid-cell": {
-      display: "flex",
-      // justifyContent: "center",
-      alignItems: "center",
-      fontSize: "14px",
-      color: "oklch(var(--bc))",
-    },
+interface TableProps {
+  rows: any[];
+  updateData: (id: number) => void;
+  deleteData: (id: number) => void;
+}
 
-    "& .MuiDataGrid-columnHeaderTitle": {
-      fontWeight: "bold",
-      color: "oklch(var(--p))",
-      fontSize: "15px",
-      textAlign: "center",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    "& ::-webkit-scrollbar": {
-      width: "8px",
-      height: "8px",
-    },
-    "& ::-webkit-scrollbar-track": {
-      backgroundColor: "#ffffff",
-    },
-    "& ::-webkit-scrollbar-thumb": {
-      backgroundColor: "oklch(var(--p))",
-    },
-
-    // borderRadius: "12px", // Set the border radius for the entire DataGrid
-  });
-
+export default function Table({ rows, updateData, deleteData }: TableProps) {
   interface RowType {
     id: number;
     desc: string;
@@ -58,79 +22,6 @@ export default function Table({ rows, updateData, deleteData }) {
     <div
       className={`text-base-content bg-base-100 shadow-md rounded-xl mb-12 z-50`}
     >
-      {/* <StyledDataGrid
-        rows={rows}
-        columns={columns}
-        slots={{
-          toolbar: GridToolbar,
-        }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
-        getRowHeight={() => "auto"}
-        sx={{
-          // backgroundColor: "oklch(var(--b1))",
-          color: "oklch(var(--bc))",
-          fontWeight: "bold",
-          "& .MuiDataGrid-cell": {
-            borderRight: "1px solid oklch(var(--b3))",
-            borderTop: "1px solid oklch(var(--b3))",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            alignItems: "center",
-            justifyContent: "center",
-            bgcolor: "oklch(var(--b1))",
-            borderRight: "1px solid oklch(var(--b3))",
-            borderTop: "1px solid oklch(var(--b3))",
-          },
-          "& .MuiDataGrid-columnHeaderTitle": {
-            fontWeight: "bold",
-          },
-
-          "& .MuiDataGrid-scrollbar": {
-            backgroundColor: "oklch(var(--b))",
-          },
-
-          " & .MuiTablePagination-root": {
-            color: "oklch(var(--bc))",
-          },
-          " & .MuiSvgIcon-root ": {
-            color: "oklch(var(--bc))",
-          },
-          "& .MuiButton-text": {
-            color: "oklch(var(--bc))",
-            fontWeight: "bold",
-          },
-          " & .MuiDataGrid-scrollbarFiller": {
-            backgroundColor: "oklch(var(--b1))",
-          },
-          "& .MuiTablePagination-selectLabel": {
-            color: "oklch(var(--bc))",
-            fontWeight: "bold",
-          },
-          "& .MuiTablePagination-displayedRows": {
-            color: "oklch(var(--bc))",
-            fontWeight: "bold",
-          },
-          "& .MuiSelect-select": {
-            color: "oklch(var(--bc))",
-            fontWeight: "bold",
-          },
-          "& .MuiInputBase-root": {
-            color: "oklch(var(--bc))",
-            // bgcolor: "oklch(var(--b2))",
-            fontWeight: "bold",
-            // border: "1px solid oklch(var(--b3))",
-          },
-          "& .MuiDataGrid-filler": {
-            backgroundColor: "oklch(var(--b1))",
-          },
-
-          height: 400,
-        }}
-      /> */}
       <div className="overflow-auto max-h-[50vh]">
         <table className="table">
           {/* head */}

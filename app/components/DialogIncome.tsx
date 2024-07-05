@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-export default function DialogIncome({ addData }) {
+interface DialogExpenseProps {
+  addData: (desc: string, amount: number, useType: string) => void;
+}
+
+export default function DialogIncome({ addData }: DialogExpenseProps) {
   //! States
   const [desc, setDesc] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
   const useType = "income";
+
+  const modalAddIncome = document.getElementById("modal_add_income");
+
+  useEffect(() => {
+    if (modalAddIncome) {
+      modalAddIncome.addEventListener("close", () => {
+        setDesc("");
+        setAmount(0);
+      });
+    }
+  }, [modalAddIncome]);
 
   return (
     <>
@@ -37,8 +52,9 @@ export default function DialogIncome({ addData }) {
                   type="text"
                   className="grow"
                   placeholder="Description"
+                  value={desc ? desc : ""}
                   onChange={(e) => {
-                    setDesc(e.target.value);
+                    setDesc(e.target.value ? e.target.value : "");
                   }}
                 />
               </label>
@@ -56,8 +72,9 @@ export default function DialogIncome({ addData }) {
                   type="text"
                   className="grow"
                   placeholder="Amount"
+                  value={amount ? amount : 0}
                   onChange={(e) => {
-                    setAmount(parseInt(e.target.value));
+                    setAmount(parseInt(e.target.value ? e.target.value : ""));
                   }}
                 />
               </label>
@@ -70,13 +87,13 @@ export default function DialogIncome({ addData }) {
                 setDesc("");
                 setAmount(0);
 
-                const modalAddIncome =
-                  document.getElementById("modal_add_income");
                 if (modalAddIncome) {
                   (modalAddIncome as HTMLDialogElement).close();
                 }
               }}
-              className="btn btn-success"
+              className={`btn ${
+                desc && amount ? "btn-success" : "btn-disabled"
+              }`}
             >
               <svg
                 fill="none"

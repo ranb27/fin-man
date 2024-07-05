@@ -25,17 +25,21 @@ export default async function Index() {
       <div className="animate-in flex-1 flex flex-col gap-20 opacity-0 max-w-4xl px-3">
         <main className="flex-1 flex flex-col gap-6 text-base-content">
           <div className="hero my-auto">
-            <div className="hero-content text-center">
-              <div className="max-w-md">
-                <h1 className="text-5xl font-bold">Hello there</h1>
+            <div className="hero-content text-left">
+              <div className="max-w-2xl">
+                <h1 className="text-5xl font-bold font">Fin Man</h1>
                 <p className="py-6">
-                  Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                  assumenda excepturi exercitationem quasi. In deleniti eaque
-                  aut repudiandae et a id nisi.
+                  Finance Management App. Take control of your financial with
+                  our platform makes managing your money easier. Track your
+                  progress, and make adjustments as needed with confidence.
+                  Discover the benefits of smart budgeting and effective
+                  financial planning, all within a single, comprehensive tool.
                 </p>
-                <button className="btn btn-primary">
-                  <Link href="/pages/dashboard">Go to Dashboard</Link>
-                </button>
+
+                <Link href="/pages/dashboard" className="btn btn-primary">
+                  Go to Dashboard
+                </Link>
+
                 {/* {isSupabaseConnected && <AuthButton />} */}
               </div>
             </div>

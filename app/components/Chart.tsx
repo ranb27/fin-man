@@ -1,47 +1,43 @@
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
+import { PieChart } from "@mui/x-charts/PieChart";
 
-const Chart = () => {
-  const series = [14, 23, 21, 17, 15, 10, 12, 17, 21];
-  const options = {
-    chart: {
-      type: "polarArea",
-      foreColor: "oklch(var(--bc))",
-    },
-    stroke: {
-      colors: ["transparent"],
-    },
-    fill: {
-      opacity: 0.8,
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          legend: {
-            position: "bottom",
-          },
-        },
-      },
-    ],
-  };
+const Chart = ({ data }: { data: any[] }) => {
+  console.log("data", data);
+
+  const mappedData = data.map((item: any, index: number) => ({
+    id: item.id || index, // Use the item's id or index as a fallback
+    value: item.amount,
+    label: item.desc,
+  }));
 
   return (
-    <div className="grid grid-cols-1 w-full h-full">
-      <div id="chart">
-        <ReactApexChart
-          options={{
-            ...options,
-            chart: { ...options.chart, type: "polarArea" },
-          }}
-          series={series}
-          type="polarArea"
-        />
-      </div>
-      <div id="html-dist"></div>
+    <div className="grid grid-cols-1 w-full max-h-[50vh] my-auto">
+      <PieChart
+        series={[
+          {
+            innerRadius: 30,
+            outerRadius: 100,
+            paddingAngle: 4,
+            cornerRadius: 5,
+            startAngle: -90,
+            endAngle: 270,
+
+            data: mappedData,
+          },
+        ]}
+        slotProps={{
+          legend: {
+            direction: "column",
+            position: { vertical: "top", horizontal: "right" },
+            padding: 0,
+            labelStyle: {
+              fontSize: 14,
+              fill: "oklch(var(--bc))",
+            },
+          },
+        }}
+        height={250}
+      />
     </div>
   );
 };
