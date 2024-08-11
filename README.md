@@ -1,4 +1,5 @@
-<h1>Site url : https://fin-man-ten.vercel.app/</h1>
+![ภาพ](https://github.com/user-attachments/assets/54f0e133-5008-4108-8540-02b6deff92ff)<h1>Site url : https://fin-man-ten.vercel.app/</h1>
+<p>user for test, email: text@text.com, passwordd: test</p>
 
 <a href="https://demo-nextjs-with-supabase.vercel.app/">
   <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
